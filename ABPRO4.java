@@ -1,8 +1,8 @@
-package ABPRO4;
-import java.util.Scanner;
+package trabajopersonal1;
+import java.util.*;
 
-public class ABPRO4 {
-	public static void main(String[] args) {
+public class Diagnosticoabpro {
+public static void main(String[] args) {
 		
 		// Se declaran las variables globales a utilizar.
 		Scanner scan = new Scanner(System.in); // funcion para guardar input del usuario.
@@ -10,7 +10,6 @@ public class ABPRO4 {
 		
 		menuPrincipal(datos);
 		
-		scan.close();
 	}
 	
 	
@@ -39,20 +38,20 @@ public class ABPRO4 {
 			
 			// Condicion para acceder a cada funcion. 
 			if (input.equals("1")) {
-				registroUsuario(datos);
+				RegistroUsuario(datos);
 			}
 			else if (input.equals("2")) {
-				mostrarUsuario(datos);
+				MostrarUsuario(datos);
 			}
 //			else if (input.equals("3")) {
-//				contarUsuario(datos);
+//				ContarUsuario(datos);
 //			}
-//			else if (input.equals("4")) {
-//				modificarUsuario(datos);
-//			}
-//			else if (input.equals("5")) {
-//				eliminarUsuario(datos);
-//			}
+			else if (input.equals("4")) {
+				ModificarUsuario(datos);
+			}
+			else if (input.equals("5")) {
+				EliminarUsuario(datos);
+			}
 			else if (input.equals("6")) {
 				System.out.println("PROGRAMA FINALIZADO.");
 				System.exit(0);
@@ -60,17 +59,18 @@ public class ABPRO4 {
 			else {
 				System.out.println("INPUT INVALIDO.");
 			}
+			
 		}
 	}
 	
 	// funcion de registro de usuarios
-	public static void registroUsuario(String[][] datos) {
+	public static void RegistroUsuario(String[][] datos) {
 		
 		// variables locales de la funcion.
 		String input;
 		Scanner scan = new Scanner(System.in);
 
-		int indice = buscarVacio(datos);
+		int indice = BuscarVacio(datos);
 		
 		// Consulta que tipo de usuario agregar a la lista.
 		System.out.println("--------------------------------");
@@ -130,23 +130,24 @@ public class ABPRO4 {
 		}
 		else {
 			System.out.println("INPUT INVALIDO.");		}
+		
 	}
 	
 	// funcion para mostrar todos los registros.
-	public static void mostrarUsuario(String[][] datos) {
-		System.out.println("NOMNRE" + " " + "FECHA NACIMIENTO" + " " + "RUN" + " " + "DIRECCION" + " " + "TELEFONO" + " " + 
+	public static void MostrarUsuario(String[][] datos) {
+		System.out.println("NONBRE" + " " + "FECHA NACIMIENTO" + " " + "RUN" + " " + "DIRECCION" + " " + "TELEFONO" + " " + 
 				"CANTIDAD EMPLEADOS" + " " + "EXPERIENCIA" + " " + "DEPARTAMENTO" + " " + "FUNCION" + " " + "NOMBRE SUPERIOR");
-		for (int i = 0; i < datos.length; i++) {
-			if (datos[i][0] != null) {
+		for (int i = 0; i < 10; i++) {
+			//if (datos[i][0] != null) {
 				System.out.println(datos[i][0] + " " + datos[i][1] + " " + datos[i][2] + " " + datos[i][3] + " " + datos[i][4] + " " + 
 								   datos[i][5] + " " + datos[i][6] + " " + datos[i][7] + " " + datos[i][8] + " " + datos[i][9]);
-			}
+			//}
 		}
-		contarUsuariosPorCategoria(datos);
+		ContarUsuariosPorCategoria(datos);
 	}
 	
 	// funcion para contar usuarios por categoria.
-	public static void contarUsuariosPorCategoria(String[][] datos) {
+	public static void ContarUsuariosPorCategoria(String[][] datos) {
 		int clientes = 0;
 		int profesionales = 0;
 		int administrativos = 0;
@@ -167,10 +168,33 @@ public class ABPRO4 {
 		System.out.println("CANTIDAD ADMINISTRATIVOS: " + administrativos);
 	}
 	
+	// funcion para eliminar usuarios.
+	public static void EliminarUsuario(String[][] datos) {
+		Scanner scan = new Scanner(System.in);
+		int indice = 0;
+		String input = "";
+		
+		System.out.println("Seleccionar RUT a ELIMINAR: ");
+		input = scan.nextLine();
+		
+		for (int i = 0; i < 100; i++) {
+			if (datos[i][2] != null && datos[i][2].equals(input)) {
+				indice = i;
+				for (int j = 0; j < 10; j++) {
+					datos[indice][j] = null;
+				}
+				break;
+			}
+		}
+		System.out.println("El usuario ha sido eliminado.");
+		Ordenar(datos);
+	}				
+
+	
 // FUNCIONES AUXILIARES.
 	
 	// funcion busqueda de registro vacio.
-	public static int buscarVacio(String[][] datos) {
+	public static int BuscarVacio(String[][] datos) {
 		int indice = 0;
 		// Este bloque de codigo busca la fila vacia de la tabla para insertar el nuevo registro.
 		// para que funcione correctamente debe de haber una funcion auxiliar que ordene la tabla al ELIMINAR registros. 
@@ -182,4 +206,97 @@ public class ABPRO4 {
 		}
 		return indice;
 	}
+
+	// funcion  para ordenar tabla luego de eliminar registro.
+	public static void Ordenar(String[][] datos) {
+		for (int i = 0; i < 99; i++) {
+			if (datos[i][0] == null && datos[i + 1][0] != null) {
+				for (int j = 0; j < 10; j++) {
+					datos[i][j] = datos[i + 1][j];
+					datos[i + 1][j] = null;
+				}
+			}
+		}
+	}
+	
+	
+	public static void ModificarUsuario(String[][] datos) {
+		try {
+			int tipoUsuario = 0;
+			Scanner scan = new Scanner(System.in);
+			MostrarUsuario(datos);
+			System.out.println("Ingrese el RUT del usuario a modificar");
+			String usuarioModificar = scan.nextLine();
+
+			for (int i = 0; i < 100; i++) {
+				if (datos[i][2] != null) {
+					if (datos[i][3] != null) {
+						tipoUsuario = 1;
+					}
+					if (datos[i][7] != null) {
+						tipoUsuario = 2;
+					}
+					if (datos[i][8] != null) {
+						tipoUsuario = 3;
+					}
+
+					if ((datos[i][2]).equals(usuarioModificar)) {
+						switch (tipoUsuario) {
+						case 1:
+							System.out.println("--------------------------------");
+							System.out.println("NOMBRE CLIENTE: ");
+							datos[i][0] = scan.nextLine();
+							System.out.println("FECHA NACIMIENTO CLIENTE: ");
+							datos[i][1] = scan.nextLine();
+							System.out.println("RUN CLIENTE: ");
+							datos[i][2] = scan.nextLine();
+							System.out.println("DIRECCION CLIENTE: ");
+							datos[i][3] = scan.nextLine();
+							System.out.println("TELEFONO CLIENTE: ");
+							datos[i][4] = scan.nextLine();
+							System.out.println("CANTIDAD EMPLEADOS CLIENTE: ");
+							datos[i][5] = scan.nextLine();
+							break;
+						case 2:
+							System.out.println("--------------------------------");
+							System.out.println("NOMBRE PROFESIONAL: ");
+							datos[i][0] = scan.nextLine();
+							System.out.println("FECHA NACIMIENTO PROFESIONAL: ");
+							datos[i][1] = scan.nextLine();
+							System.out.println("RUN PROFESIONAL: ");
+							datos[i][2] = scan.nextLine();
+							System.out.println("EXPERIENCIA PROFESIONAL: ");
+							datos[i][6] = scan.nextLine();
+							System.out.println("DEPARTAMENTO PROFESIONAL: ");
+							datos[i][7] = scan.nextLine();
+							break;
+						case 3:
+							System.out.println("--------------------------------");
+							System.out.println("NOMBRE ADMINISTRATIVO: ");
+							datos[i][0] = scan.nextLine();
+							System.out.println("FECHA NACIMIENTO ADMINISTRATIVO: ");
+							datos[i][1] = scan.nextLine();
+							System.out.println("RUN ADMINISTRATIVO: ");
+							datos[i][2] = scan.nextLine();
+							System.out.println("FUNCION ADMINISTRATIVA: ");
+							datos[i][8] = scan.nextLine();
+							System.out.println("NOMBRE SUPERIOR ADMINISTRATIVO: ");
+							datos[i][9] = scan.nextLine();
+							break;
+						default:
+						}
+
+					}
+
+				}
+			}
+			System.out.println("Cambios realizados correctamente");
+			// mostrarUsuario(datos);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println(e);
+		}
+	}
+
+
 }
